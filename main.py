@@ -7,9 +7,10 @@ import re
 import time
 import random
 
-failed_list = []
+successfull_list = []
 captcha_list = []
 no_form_list = []
+
 
 def file_read():
     my_urls = []
@@ -32,25 +33,30 @@ def scrape(url):
     try:
         driver.get(url)
         time.sleep(10)
-        try:
-            input_elements = driver.find_elements(By.TAG_NAME, 'input')
-            print(input_elements)
-        except NoSuchElementException:
+        input_elements = driver.find_elements(By.TAG_NAME, 'input')
+        if input_elements:
+            for input_element in input_elements:
+                print(input_element.get_attribute('outerHTML'))
+            successfull_list.append(url)
+        else:
             no_form_list.append(url)
         driver.quit()
         time.sleep(5)
     except WebDriverException as e:
         driver.quit()
-        failed_list.append(url)
         time.sleep(5)
 
 
 if __name__ == '__main__':
     urls = file_read()
 
-    for index, url in enumerate(urls[:25]):
+    for index, url in enumerate(urls):
         print(index, url)
         scrape(url)
 
-    print(failed_list)
-    print(no_form_list)
+    print(successfull_list)
+    with open('successful_urls.csv', 'w', newline='') as file:
+        csv_writer = csv.writer(file)
+
+        for url in successfull_list:
+            csv_writer.writerow([url])
