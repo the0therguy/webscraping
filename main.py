@@ -14,7 +14,8 @@ no_form_list = []
 
 def file_read():
     my_urls = []
-    with open('nilesh list contact forms.csv', 'r') as file:
+    # with open('nilesh list contact forms.csv', 'r') as file:
+    with open('Test Link.csv', 'r') as file:
         data = csv.reader(file)
 
         for csv_data in data:
