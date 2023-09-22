@@ -176,8 +176,14 @@ if __name__ == '__main__':
             'subject': form_input_data['Subject'][0],
             'message': form_input_data['Message'][0],
             'name': form_input_data['first name'][0] + ' ' + form_input_data['last name'][0]}
+    print(data)
 
     for index, url in enumerate(urls[:5]):
         print(index, url)
         scrape(url, user_data=data)
     driver.quit()
+    '''
+    captcha pattern = captcha = driver.find_element(By.CLASS_NAME, 'g-recaptcha')
+    captcha pattern = captcha = driver.find_element(By.CLASS_NAME, 'g-recaptcha')
+    '''
+    # print(form_input_data['first name'][0])
