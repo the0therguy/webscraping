@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 captcha_list = []
 url_list = []
@@ -29,7 +31,7 @@ def submit_contact_form():
     option = webdriver.FirefoxOptions()
     driver = webdriver.Firefox(options=option)
     try:
-        driver.get("https://251-dekalb0-rentcafewebsite.securecafe.com/onlineleasing/apartmentsforrent/contactus")
+        driver.get("https://www.tricityrentals.com/contactus.aspx")
         time.sleep(5)
 
         # Find and fill out the form fields if they exist
@@ -55,10 +57,10 @@ def submit_contact_form():
                                                              "@name='firstname' or"
                                                              "@name='Firstname' or"
                                                              "@name='FirstName' or"
+                                                             "@name='input_1.3' or"
                                                              "@placeholder='First Name' or"
                                                              "@placeholder='First Name*' or"
-                                                             "@placeholder='First'"
-                                                             "]")
+                                                             "@placeholder='First']")
             first_name_field.send_keys(first_name[0])
         except NoSuchElementException:
             pass
@@ -71,6 +73,7 @@ def submit_contact_form():
                                                             " @name='lastname' or"
                                                             " @name='Lastname' or"
                                                             " @name='LastName' or"
+                                                            "@name='input_1.6' or"
                                                             " @placeholder='Last Name' or"
                                                             " @placeholder='Last Name*' or"
                                                             " @placeholder='Last'"
@@ -93,7 +96,7 @@ def submit_contact_form():
                                                             "@name='phone_number' or "
                                                             "@name='phone-number' or "
                                                             "@name='telephone' or "
-                                                            "@placeholder='Phone', or "
+                                                            "@placeholder='Phone' or "
                                                             "@placeholder='Phone No' or "
                                                             "@placeholder='Phone No*' or "
                                                             "@placeholder='Phone No.' or "
@@ -165,6 +168,29 @@ def submit_contact_form():
             message_field.send_keys(message[0])
         except NoSuchElementException:
             pass
+
+        # Submit button
+        try:
+            submit_button = driver.find_element(By.XPATH, "//input[@type='submit'] | //button[@type='submit' or @type='Submit']")
+            submit_button.click()
+            print(" Submit button clicked " + str(submit_button.is_displayed()))
+            time.sleep(5)
+            try:
+                # Find elements containing the text "Thank you" or "Thanks"
+                elements_with_thank_you = driver.find_elements(By.XPATH, "//*[contains(text(),'Thank you') or contains(text(),'Thanks')]")
+                page_source = driver.page_source
+                # Check if "Thank you" is in the page source
+                if elements_with_thank_you:
+                    print("Found 'Thank you' text on the page.")
+                else:
+                    print("'Thank you' text not found on the page.")
+
+            except NoSuchElementException:
+                pass
+
+        except NoSuchElementException:
+            pass
+
 
         time.sleep(5)
         driver.quit()
